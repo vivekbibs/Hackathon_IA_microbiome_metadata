@@ -1,0 +1,16 @@
+La photosynthèse (document d'exemple)
+
+La photosynthèse est le processus par lequel les plantes, les algues et certaines
+bactéries transforment l'énergie lumineuse en énergie chimique. Elle consomme du
+dioxyde de carbone et de l'eau, et produit du glucose et du dioxygène.
+
+Chez les plantes, elle a lieu dans les chloroplastes, des organites présents surtout
+dans les cellules des feuilles. Ils contiennent la chlorophylle, le pigment vert qui
+absorbe la lumière, principalement dans le rouge et le bleu. Le vert est peu absorbé,
+c'est pour cela que les feuilles nous paraissent vertes.
+
+On distingue deux grandes phases. La phase claire dépend de la lumière : elle se
+déroule dans les membranes des thylakoïdes, casse des molécules d'eau et produit de
+l'ATP, du NADPH et du dioxygène. La phase sombre, ou cycle de Calvin,
+n'utilise pas directement la lumière : elle se passe dans le stroma et utilise l'ATP
+et le NADPH pour fixer le dioxyde de carbone et fabriquer des sucres.

@@ -1,0 +1,40 @@
+Hackathon IA - Agent LLM et MCP
+Dans le cadre de son axe stratégique dédié à l’intelligence artificielle et du projet Mudis4LS, l’IFB/ELIXIR-FR organise un hackathon IA du 18 au 20 novembre 2026, hébergé par PRABI-AMSB sur le campus de l’Université Lyon 1 La Doua (Villeurbanne). Pour cet événement, nous vous demandons de vous pré-inscrire d’ici le mardi 29 septembre. Vous recevrez à l’issue de cette date, un retour sur votre inscription.
+
+Cet événement, réparti sur 4 demi-journées, a pour objectif de présenter un état des lieux des technologies de l’Intelligence artificielle applicables en biologie-santé, en particulier sur les LLM (Large Language Models) et des technologies qui en découlent, puis apprendre à les utiliser via l’API ALBERT (DINUM). Les sessions de hacking seront particulièrement centrées sur l’utilisation concrète des LLM (Large Language Models) via le RAG (Retrieval-Augmented Generation), le mode agentique et le MCP (Model Context Protocol).
+
+Hackathons IA_V2_OK
+Programme
+Introduction générale aux concepts et tendances (1ère demi-journée)
+Accueil
+Introduction IA global
+Agents, Tool Calling, MCP et Harness : concepts, tendances, panorama de l’écosystème
+Initiatives IA à l’IFB : panorama des différents projets IA/IFB en cours
+Présentation rapide des projets de hacking
+Cette 1ʳᵉ après-midi se fera en format hybride.
+
+Sessions de hacking (2ème et 3ème demi-journées)
+Introduction technique :
+Mise en place
+Tutoriel pas à pas :
+Implémentation des technologies Ollama / ALBERT API / IA IFB
+Création d’un MCP basique avec FastMCP
+Tool calling et agents IA via package openAI
+Bilan de fin de journée
+ 
+
+Fin du hackathon et bilan (4ème demi-journée)
+Finalisation des développements et rédaction du compte-rendu par équipe
+Présentations des résultats par équipe (démo + retour d’expérience)
+Bilan collectif, conclusion, remerciements
+Informations pratiques & inscriptions
+Quand ? Du mercredi 18 à 14h au vendredi 20 novembre 2026 à 12h (4 demi-journées).
+
+Où ? au campus de l’université Lyon 1 La Doua (Villeurbanne).
+
+Pour qui ? Chercheurs et ingénieurs de l’IFB/ELIXIR-FR (IFB-core, ELIXIR-FR, plateformes membres, contributrices et équipes associées) intéressés/concernés par l’IA et ses applications en biologie.
+
+Frais de participation : Pour cet événement, l’IFB/ELIXIR-FR prendra en charge les pauses café et le déjeuner du 19 novembre, ainsi que les missions des intervenants et des participants IFB-core.
+
+Si vous êtes intéressés, mais pas certain de pouvoir vous pré-inscrire d’ici le vendredi 2 octobre, merci de nous le signaler via le formulaire de contact du site IFB.
+

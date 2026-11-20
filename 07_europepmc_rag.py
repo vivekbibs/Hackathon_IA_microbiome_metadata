@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Script 07 : RAG à partir d'un article EuropePMC avec extraction de données de cohorte.
 Ce script permet de :
@@ -49,7 +50,7 @@ class EuropePMCRAG:
         url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{self.pmcid}/fullTextXML"
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-            response = requests.get(url, headers=headers, timeout=15)
+            response = requests.get(url, headers=headers, timeout=120)
             
             if response.status_code == 503:
                 raise Exception("Le serveur EuropePMC est temporairement indisponible (Erreur 503).")
@@ -112,12 +113,12 @@ class EuropePMCRAG:
         matrice = np.array(vecteurs)
         self.embeddings = matrice / np.linalg.norm(matrice, axis=1, keepdims=True)
 
-    def query(self, question, system_prompt=None):
+    def query(self, question, system_prompt=None, nb_morceaux=NB_MORCEAUX):
         vecteur_question = client.embeddings.create(model=MODELE_EMBEDDINGS, input=[question]).data[0].embedding
         vecteur_question = np.array(vecteur_question) / np.linalg.norm(vecteur_question)
         
         scores = self.embeddings @ vecteur_question
-        meilleurs = np.argsort(scores)[::-1][:NB_MORCEAUX]
+        meilleurs = np.argsort(scores)[::-1][:nb_morceaux]
         
         contexte = ""
         for i in meilleurs:
@@ -161,36 +162,52 @@ class EuropePMCRAG:
         return results
 
     def extract_disease_status(self):
-        """Détermine le statut global et son homogénéité pour la cohorte."""
-        question = """Determine the disease status of the study cohort as a whole, not patient by patient.
-Return only valid JSON with exactly these fields:
+                """Résume la cohorte et détermine son statut global de maladie."""
+                question = """For retrieval, focus on the study population that provided the human gut or stool samples:
+healthy volunteers, healthy controls, patients, diagnoses, inclusion/exclusion criteria,
+disease-free statements, and descriptions of distinct study groups.
+
+Using only the retrieved article passages, return only valid JSON with exactly these fields:
 {
+    "cohort_description": "short free-text description of the study cohort",
   "disease_status": "healthy | exact disease name | mixed | unknown",
-  "disease_status_homogeneous": true | false | null
+    "disease_status_homogeneous": true | false | null,
+    "disease_status_evidence": "short verbatim quote from the article, or empty string"
 }
 Rules:
-- Use "healthy" if the entire cohort consists of healthy participants or controls.
-- If everyone has the same disease, return its exact name as stated in the article.
-- Use "mixed" if the cohort includes healthy and diseased groups, or different diseases.
-- Set disease_status_homogeneous to true when all participants/groups share the same
-  disease status, false when the article describes different statuses, and null when
-  the article does not provide enough information.
-- Use "unknown" when disease status cannot be determined. Do not infer it from a
-  treatment or from patient-level examples.
+- Describe the cohort , at cohort level, including subgroups if the article
+    explicitly distinguishes them. Do not produce patient-level records.
+- Use "healthy" when the population is described as healthy/controls, or when explicit
+    recruitment criteria establish that participants were disease-free. Do not infer health
+    only because no disease is mentioned.
+- If all sampled participants have the same named disease, use that exact disease name.
+- Use "mixed" when the sampled cohort combines healthy and diseased groups or distinct
+    disease groups. Set disease_status_homogeneous to false in that case.
+- Set disease_status_homogeneous to true when the article supports one shared status;
+    use null when the available evidence is insufficient.
+- Use "unknown" when the cohort's status cannot be established from the passages.
+- Do not classify the cohort as diseased based only on a condition listed as an exclusion
+    criterion, background, or future research.
+- The evidence must be a short exact quote supporting the classification. Do not invent
+    a quote; use an empty string if no supporting quote is available.
 """
         response = self.query(
             question,
             system_prompt=(
-                "You extract study-cohort information from the supplied article passages. "
-                "Follow the requested JSON format and do not guess."
+                                "You extract evidence-grounded metadata for a human gut study cohort. "
+                                "Distinguish the sampled cohort from diseases discussed elsewhere in the article. "
+                                "Follow the requested JSON format and do not guess."
             ),
+                        nb_morceaux=10,
         )
         content = re.sub(r"^```(?:json)?\s*|\s*```$", "", response.strip())
         data = json.loads(content)
         if (
             not isinstance(data, dict)
+                        or not isinstance(data.get("cohort_description"), str)
             or not isinstance(data.get("disease_status"), str)
             or type(data.get("disease_status_homogeneous")) not in (bool, type(None))
+                        or not isinstance(data.get("disease_status_evidence"), str)
         ):
             raise ValueError("Réponse invalide pour l'extraction du disease status.")
         return data
@@ -200,7 +217,8 @@ Rules:
         filename = f"results_{self.pmcid}.csv"
         fieldnames = [
             "pmcid", "taille_cohorte", "sexe_cohorte", "age_cohorte", "pays_etude",
-            "disease_status", "disease_status_homogeneous",
+            "cohort_description", "disease_status", "disease_status_homogeneous",
+            "disease_status_evidence",
         ]
         
         with open(filename, mode='w', newline='', encoding='utf-8') as f:

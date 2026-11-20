@@ -1,2 +1,2 @@
-pmcid,taille_cohorte,sexe_cohorte,age_cohorte,pays_etude
-PMC5513205,Non mentionné,Mixte.,22‑48 ans,Italie
+pmcid,taille_cohorte,sexe_cohorte,age_cohorte,pays_etude,disease_status,disease_status_homogeneous
+PMC5513205,Non mentionné,Mixte.,22‑48 ans,Italie,healthy,True

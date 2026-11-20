@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research AI - Europe PMC Assistant</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🧬</div>
+            <div>
+                <h2>Research AI</h2>
+                <span>Europe PMC Assistant</span>
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+
+            <div class="section-title">ARTICLE</div>
+
+            <label for="pmcid">Europe PMC ID</label>
+
+            <div class="pmcid-input">
+                <input
+                    type="text"
+                    id="pmcid"
+                    placeholder="e.g. PMC1234567"
+                    value=""
+                >
+            </div>
+
+            <button id="loadArticleBtn" class="load-button">
+                <span>Load article</span>
+            </button>
+
+            <div id="articleStatus" class="status-message">
+                No article loaded
+            </div>
+
+            <div class="article-info" id="articleInfo">
+
+                <div class="section-title">ARTICLE INFORMATION</div>
+
+                <h3 id="articleTitle">No article selected</h3>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">Journal</span>
+                    <span id="articleJournal">-</span>
+                </div>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">Publication date</span>
+                    <span id="articleDate">-</span>
+                </div>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">Authors</span>
+                    <span id="articleAuthors">-</span>
+                </div>
+
+                <div class="metadata-item">
+                    <span class="metadata-label">Text chunks</span>
+                    <span id="articleChunks">-</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="sidebar-footer">
+            <span class="status-dot"></span>
+            Europe PMC RAG API
+        </div>
+
+    </aside>
+
+
+    <!-- Main content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="chat-header">
+
+            <div>
+                <h1>Scientific Article Assistant</h1>
+                <p>Ask questions about scientific publications</p>
+            </div>
+
+            <div class="header-badge">
+                <span class="status-dot"></span>
+                RAG enabled
+            </div>
+
+        </header>
+
+
+        <!-- Chat area -->
+        <section class="chat-container">
+
+            <div id="welcomeScreen" class="welcome-screen">
+
+                <div class="welcome-icon">🧬</div>
+
+                <h2>Your scientific research assistant</h2>
+
+                <p>
+                    Load a scientific article using its Europe PMC ID,
+                    then ask questions about its content, methodology,
+                    participants and results.
+                </p>
+
+                <div class="suggestions">
+
+                    <button class="suggestion-btn" data-question="What is the main objective of this study?">
+                        What is the main objective of this study?
+                    </button>
+
+                    <button class="suggestion-btn" data-question="Describe the study population and cohort size.">
+                        Describe the study population
+                    </button>
+
+                    <button class="suggestion-btn" data-question="What biological samples were collected?">
+                        What biological samples were collected?
+                    </button>
+
+                    <button class="suggestion-btn" data-question="What sequencing methods were used?">
+                        What sequencing methods were used?
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Messages -->
+            <div id="messages" class="messages"></div>
+
+        </section>
+
+
+        <!-- Input area -->
+        <footer class="chat-input-area">
+
+            <div class="input-wrapper">
+
+                <textarea
+                    id="questionInput"
+                    placeholder="Load an article first..."
+                    rows="1"
+                    disabled
+                ></textarea>
+
+                <button id="sendBtn" disabled>
+                    ➤
+                </button>
+
+            </div>
+
+            <p class="input-disclaimer">
+                AI-generated answers may contain inaccuracies.
+                Verify important information against the original article.
+            </p>
+
+        </footer>
+
+    </main>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>

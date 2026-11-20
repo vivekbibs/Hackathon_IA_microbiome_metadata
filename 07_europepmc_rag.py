@@ -49,7 +49,7 @@ class EuropePMCRAG:
         url = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{self.pmcid}/fullTextXML"
         try:
             headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-            response = requests.get(url, headers=headers, timeout=15)
+            response = requests.get(url, headers=headers, timeout=52)
             
             if response.status_code == 503:
                 raise Exception("Le serveur EuropePMC est temporairement indisponible (Erreur 503).")

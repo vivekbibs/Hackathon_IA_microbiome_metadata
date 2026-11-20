@@ -1,6 +1,5 @@
 """
 Script 07 : RAG à partir d'un article EuropePMC avec extraction de données de cohorte.
-
 Ce script permet de :
 1. Récupérer un article scientifique au format XML via l'API EuropePMC.
 2. Extraire les métadonnées (titre, journal, date, auteurs).
@@ -16,6 +15,7 @@ import os
 import sys
 import requests
 import numpy as np
+import json
 import xml.etree.ElementTree as ET
 import csv
 import re
@@ -154,13 +154,54 @@ class EuropePMCRAG:
             print(f"  Recherche de {key}...")
             res = self.query(q, system_prompt=system_prompt)
             results[key] = res.strip()
+
+        print("  Recherche du disease status de la cohorte...")
+        results.update(self.extract_disease_status())
             
         return results
+
+    def extract_disease_status(self):
+        """Détermine le statut global et son homogénéité pour la cohorte."""
+        question = """Determine the disease status of the study cohort as a whole, not patient by patient.
+Return only valid JSON with exactly these fields:
+{
+  "disease_status": "healthy | exact disease name | mixed | unknown",
+  "disease_status_homogeneous": true | false | null
+}
+Rules:
+- Use "healthy" if the entire cohort consists of healthy participants or controls.
+- If everyone has the same disease, return its exact name as stated in the article.
+- Use "mixed" if the cohort includes healthy and diseased groups, or different diseases.
+- Set disease_status_homogeneous to true when all participants/groups share the same
+  disease status, false when the article describes different statuses, and null when
+  the article does not provide enough information.
+- Use "unknown" when disease status cannot be determined. Do not infer it from a
+  treatment or from patient-level examples.
+"""
+        response = self.query(
+            question,
+            system_prompt=(
+                "You extract study-cohort information from the supplied article passages. "
+                "Follow the requested JSON format and do not guess."
+            ),
+        )
+        content = re.sub(r"^```(?:json)?\s*|\s*```$", "", response.strip())
+        data = json.loads(content)
+        if (
+            not isinstance(data, dict)
+            or not isinstance(data.get("disease_status"), str)
+            or type(data.get("disease_status_homogeneous")) not in (bool, type(None))
+        ):
+            raise ValueError("Réponse invalide pour l'extraction du disease status.")
+        return data
 
     def save_to_csv(self, data):
         """Sauvegarde les données extraites dans un fichier CSV."""
         filename = f"results_{self.pmcid}.csv"
-        fieldnames = ["pmcid", "taille_cohorte", "sexe_cohorte", "age_cohorte", "pays_etude"]
+        fieldnames = [
+            "pmcid", "taille_cohorte", "sexe_cohorte", "age_cohorte", "pays_etude",
+            "disease_status", "disease_status_homogeneous",
+        ]
         
         with open(filename, mode='w', newline='', encoding='utf-8') as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
